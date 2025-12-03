@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>रक्त संचार</title>
+
+    <style>
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    height: 38px;
+    width: 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(255,0,0,0.4));
+}
+
+.logo span {
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ff3b3b, #ff8b3b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+        /* ROOT COLORS */
+        :root{
+            --bg:#0b0b0b;
+            --panel:#111;
+            --accent:#d50000;
+            --muted:#aaaaaa;
+            --radius:14px;
+            --shadow:0 10px 30px rgba(0,0,0,0.6);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* BODY */
+        body{
+          margin:0;
+          background:var(--bg);
+          color:white;
+        }
+
+        /* NAVBAR */
+        header{
+          position:sticky;
+          top:0;
+          background:#111;
+          padding:18px 40px;
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          box-shadow:var(--shadow);
+          z-index:10;
+        }
+        .logo{
+          font-size:26px;
+          font-weight:700;
+          color:var(--accent);
+        }
+        nav a{
+          margin-left:20px;
+          text-decoration:none;
+          color:var(--muted);
+          font-weight:600;
+          transition:.3s;
+        }
+        nav a:hover{
+          color:white;
+        }
+
+        /* BUTTON */
+        .btn{
+          background:var(--accent);
+          border:none;
+          padding:12px 20px;
+          border-radius:10px;
+          color:white;
+          font-weight:700;
+          cursor:pointer;
+          box-shadow:0 6px 16px rgba(213,0,0,0.4);
+          transition:.25s;
+        }
+        .btn:hover{
+          transform:scale(1.05);
+        }
+
+        /* HERO SECTION */
+        .hero{
+          display:grid;
+          grid-template-columns:1fr 400px;
+          padding:60px;
+          gap:40px;
+          align-items:center;
+        }
+        .hero-title{
+          font-size:44px;
+          font-weight:800;
+        }
+        .lead{
+          color:var(--muted);
+          font-size:17px;
+          margin-top:10px;
+          line-height:1.6;
+        }
+
+        /* FORM PANEL */
+        .panel{
+          background:#111;
+          padding:26px;
+          border-radius:var(--radius);
+          box-shadow:var(--shadow);
+          border:1px solid rgba(255,255,255,0.1);
+        }
+        input,select{
+          width:100%;
+          padding:12px;
+          border-radius:10px;
+          border:1px solid rgba(255,255,255,0.1);
+          background:#0d0d0d;
+          color:white;
+          margin-bottom:12px;
+          outline:none;
+        }
+        input:focus, select:focus{
+          border-color:var(--accent);
+          box-shadow:0 0 0 3px rgba(213,0,0,0.3);
+        }
+
+        /* DONOR CARDS */
+        .donor-card{
+          background:#111;
+          padding:20px;
+          border-radius:10px;
+          border:1px solid rgba(255,255,255,0.1);
+          margin-bottom:15px;
+          transition:.3s;
+        }
+        .donor-card:hover{
+          transform:translateY(-4px);
+          border-color:var(--accent);
+        }
+
+        /* WHY CARDS */
+        .why-card{
+            background:#111;
+            padding:28px;
+            border-radius:14px;
+            border:1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: .35s;
+        }
+        .why-card:hover{
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(213,0,0,0.35);
+        }
+        .why-card .icon{
+            font-size:35px;
+            margin-bottom:10px;
+            color:var(--accent);
+        }
+        .why-card p{
+            color:var(--muted);
+        }
+
+        /* REQUEST CARD BASE */
+        .request-card {
+            background:#111;
+            padding:20px;
+            border-radius:12px;
+            margin-bottom:15px;
+            border:1px solid rgba(255,255,255,0.1);
+            transition:0.3s;
+        }
+
+        /* LOW */
+        .low {
+            border-left: 5px solid #4caf50;
+        }
+
+        /* MEDIUM */
+        .medium {
+            border-left: 5px solid #ffeb3b;
+        }
+
+        /* HIGH */
+        .high {
+            border-left: 5px solid #ff9800;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* CRITICAL */
+        .critical {
+            border-left: 5px solid #ff0000;
+            animation: critical-blink 0.6s infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+         0% { box-shadow: 0 0 5px rgba(255,152,0,0.3); }
+         50% { box-shadow: 0 0 20px rgba(255,152,0,0.6); }
+         100% { box-shadow: 0 0 5px rgba(255,152,0,0.3); }
+        }
+
+        @keyframes critical-blink {
+         0% { box-shadow: 0 0 10px rgba(255,0,0,0.4); }
+         50% { box-shadow: 0 0 25px rgba(255,0,0,1); }
+         100% { box-shadow: 0 0 10px rgba(255,0,0,0.4); }
+        }
+
+        /* FOOTER */
+        footer{
+          margin-top:50px;
+          padding:30px;
+          text-align:center;
+          background:#0d0d0d;
+          color:var(--muted);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <img src="images/logo.png" class="logo-img" />
+        <span>रक्त संचार</span>
+    </div>
+
+    <nav>
+        <a href="#why">Why Donate</a>
+        <a href="#donors">Donors</a>
+        <a href="#" id="openRequestForm">Requests</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div>
+        <div class="hero-title">Give Blood. Save Lives.</div>
+        <p class="lead">Join thousands of donors and help save lives.</p>
+        <button class="btn" id="joinDonorBtn" style="margin-top:15px;">Join as Donor</button>
+    </div>
+
+    <div class="panel">
+        <h3>Quick Register</h3>
+        <form id="registerForm">
+            <input id="name" placeholder="Full Name" required>
+            <input id="age" type="number" placeholder="Age" required>
+            <select id="bloodGroup" required>
+                <option value="">Blood Group</option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>O+</option><option>O-</option>
+                <option>AB+</option><option>AB-</option>
+            </select>
+            <input id="phone" placeholder="Phone Number" required>
+            <input id="city" placeholder="City" required>
+            <button class="btn" style="width:100%;">Submit</button>
+        </form>
+    </div>
+</section>
+
+<!-- WHY -->
+<div class="card-grid" id="why">
+    <div class="why-card">
+        <div class="icon">🩸</div>
+        <h3>Safe & Secure Donation</h3>
+        <p>Medically supervised donation with safe and hygienic environment.</p>
+    </div>
+
+    <div class="why-card">
+        <div class="icon">📍</div>
+        <h3>Instant Nearby Alerts</h3>
+        <p>Get notified about urgent blood needs around you instantly.</p>
+    </div>
+
+    <div class="why-card">
+        <div class="icon">❤️</div>
+        <h3>Impact Multiple Lives</h3>
+        <p>Your one donation can save up to three precious lives. Be a hero.</p>
+    </div>
+</div>
+
+<!-- DONOR SECTION -->
+<section style="padding:40px;" id="donors">
+    <h2>Donors Near You</h2>
+    <p class="lead">Search donors by blood group or city.</p>
+    <input id="search" placeholder="Search donor...">
+    <div id="donorList" style="margin-top:20px;"></div>
+</section>
+
+<!-- REQUEST POPUP -->
+<div id="requestModal" style="
+    display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(5px); justify-content:center;
+    align-items:center; z-index:999;">
+    <div style="background:#111; padding:30px; border-radius:12px; width:350px">
+        <h3>Blood Request Form</h3>
+        <form id="requestForm">
+            <input id="rname" placeholder="Patient Name" required>
+            <select id="rgroup" required>
+                <option value="">Blood Group</option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>O+</option><option>O-</option>
+                <option>AB+</option><option>AB-</option>
+            </select>
+            <input id="rhospital" placeholder="Hospital Name" required>
+            <input id="rcity" placeholder="City" required>
+            <select id="rurgency" required>
+                <option value="">Urgency</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Critical</option>
+            </select>
+            <button class="btn" style="width:100%; margin-top:10px;">Submit Request</button>
+        </form>
+        <button id="closeRequestForm" style="margin-top:15px; background:none; border:none; color:#aaa;">Close</button>
+    </div>
+</div>
+
+<!-- REQUEST LIST (BOTTOM SECTION) -->
+<section id="requests" style="padding:60px; margin-top:40px;">
+    <h2>Blood Requests</h2>
+    <p class="lead">Incoming blood requests will appear below.</p>
+    <div id="requestList" style="margin-top:25px;"></div>
+</section>
+
+
+<footer>
+    © 2025 Bloodly — All Rights Reserved
+</footer>
+
+<script>
+
+    /* -------------------------
+       DONOR FUNCTIONS
+    --------------------------*/
+
+    const API = '/api/donors';
+
+    async function loadDonors(q='') {
+        const url = q ? `${API}?q=${encodeURIComponent(q)}` : API;
+        const res = await fetch(url);
+        const data = await res.json();
+        renderDonors(data);
+    }
+
+    function renderDonors(list) {
+        const box = document.getElementById("donorList");
+        if (!list.length) {
+            box.innerHTML = "<p>No donors found.</p>";
+            return;
+        }
+
+        box.innerHTML = list.map(d => `
+            <div class="donor-card">
+                <h3>${d.name}</h3>
+                <p><b>Age:</b> ${d.age}</p>
+                <p><b>Group:</b> ${d.bloodGroup}</p>
+                <p><b>City:</b> ${d.city}</p>
+                <p><b>Phone:</b> ${d.phone}</p>
+            </div>
+        `).join("");
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const donor = {
+            name: document.getElementById("name").value,
+            age: Number(document.getElementById("age").value),
+            bloodGroup: document.getElementById("bloodGroup").value,
+            phone: document.getElementById("phone").value,
+            city: document.getElementById("city").value
+        };
+
+        const res = await fetch(API, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(donor)
+        });
+
+        if (res.ok) {
+            alert("Donor Registered Successfully!");
+            e.target.reset();
+            loadDonors();
+        }
+    });
+
+    document.getElementById("search").addEventListener("input", (e) => {
+        loadDonors(e.target.value);
+    });
+
+    loadDonors();
+
+    /* JOIN AS DONOR BUTTON */
+    document.getElementById("joinDonorBtn").addEventListener("click", () => {
+        const form = document.getElementById("registerForm");
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        form.style.boxShadow = "0 0 25px red";
+        setTimeout(() => form.style.boxShadow = "none", 1500);
+    });
+
+    /* -------------------------
+       REQUEST SYSTEM
+    --------------------------*/
+
+    const REQUEST_API = "/api/requests";
+
+    document.getElementById("openRequestForm").addEventListener("click", () => {
+        document.getElementById("requestModal").style.display = "flex";
+    });
+
+    document.getElementById("closeRequestForm").addEventListener("click", () => {
+        document.getElementById("requestModal").style.display = "none";
+    });
+
+    document.getElementById("requestForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const req = {
+            patientName: document.getElementById("rname").value,
+            bloodGroup: document.getElementById("rgroup").value,
+            hospital: document.getElementById("rhospital").value,
+            city: document.getElementById("rcity").value,
+            urgency: document.getElementById("rurgency").value
+        };
+
+        await fetch(REQUEST_API, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify(req)
+        });
+
+        alert("Blood Request Submitted!");
+        document.getElementById("requestModal").style.display = "none";
+
+        loadRequests();
+    });
+
+    async function loadRequests() {
+        const res = await fetch(REQUEST_API);
+        const list = await res.json();
+
+        const box = document.getElementById("requestList");
+
+        box.innerHTML = list.map(r => {
+            const u = r.urgency.toLowerCase();
+            return `
+            <div class="request-card ${u}">
+                <h3>${r.patientName}</h3>
+                <p><b>Group:</b> ${r.bloodGroup}</p>
+                <p><b>Hospital:</b> ${r.hospital}</p>
+                <p><b>City:</b> ${r.city}</p>
+                <p><b>Urgency:</b> ${r.urgency}</p>
+            </div>`;
+        }).join("");
+    }
+
+    loadRequests();
+
+</script>
+
+</body>
+</html>
