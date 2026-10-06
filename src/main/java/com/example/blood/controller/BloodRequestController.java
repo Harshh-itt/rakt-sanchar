@@ -1,30 +1,29 @@
 package com.example.blood.controller;
 
 import com.example.blood.model.BloodRequest;
+import com.example.blood.repository.BloodRequestRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/requests")
 @CrossOrigin("*")
 public class BloodRequestController {
 
-    private Map<Long, BloodRequest> requestDB = new HashMap<>();
-    private AtomicLong idCounter = new AtomicLong(1);
+    private final BloodRequestRepository bloodRequestRepository;
 
-    @PostMapping
-    public BloodRequest addRequest(@RequestBody BloodRequest req) {
-        Long id = idCounter.getAndIncrement();
-        req.setId(id);
-        requestDB.put(id, req);
-        return req;
+    public BloodRequestController(BloodRequestRepository bloodRequestRepository) {
+        this.bloodRequestRepository = bloodRequestRepository;
     }
 
     @GetMapping
     public List<BloodRequest> getRequests() {
-        return new ArrayList<>(requestDB.values());
+        return bloodRequestRepository.findAll();
+    }
+
+    @PostMapping
+    public BloodRequest addRequest(@RequestBody BloodRequest request) {
+        return bloodRequestRepository.save(request);
     }
 }
-

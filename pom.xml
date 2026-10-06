@@ -9,14 +9,16 @@
     <groupId>com.example</groupId>
     <artifactId>blood-app</artifactId>
     <version>1.0.0</version>
+
     <name>blood-app</name>
-    <description>Blood Donation App (Frontend + In-memory Backend)</description>
+    <description>Blood Donation App with Spring Boot and MongoDB</description>
 
     <properties>
         <java.version>17</java.version>
         <spring.boot.version>3.2.0</spring.boot.version>
     </properties>
 
+    <!-- Spring Boot dependency versions -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -37,20 +39,37 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- For JSON -->
+        <!-- MongoDB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
             </plugin>
+
         </plugins>
     </build>
 
