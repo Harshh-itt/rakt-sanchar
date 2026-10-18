@@ -10,6 +10,10 @@ public class ApiException extends RuntimeException {
     private final HttpStatus status;
     private final Map<String, Object> details;
 
+    public ApiException(ErrorCode errorCode, String message) {
+        this(errorCode, defaultStatus(errorCode), message, Collections.emptyMap());
+    }
+
     public ApiException(ErrorCode errorCode, HttpStatus status, String message) {
         this(errorCode, status, message, Collections.emptyMap());
     }
@@ -19,6 +23,20 @@ public class ApiException extends RuntimeException {
         this.errorCode = errorCode;
         this.status = status;
         this.details = details != null ? details : Collections.emptyMap();
+    }
+
+    private static HttpStatus defaultStatus(ErrorCode code) {
+        if (code == null) {
+            return HttpStatus.BAD_REQUEST;
+        }
+        return switch (code) {
+            case IDENTITY_REQUIRED -> HttpStatus.UNAUTHORIZED;
+            case FORBIDDEN, HOSPITAL_NOT_VERIFIED -> HttpStatus.FORBIDDEN;
+            case RESOURCE_NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case DUPLICATE_RESOURCE, INVALID_STATE_TRANSITION -> HttpStatus.CONFLICT;
+            case INELIGIBLE_DONOR, INCOMPATIBLE_BLOOD_GROUP, VALIDATION_ERROR, INVALID_ENUM_VALUE, MALFORMED_JSON, BAD_REQUEST -> HttpStatus.BAD_REQUEST;
+            case INTERNAL_ERROR -> HttpStatus.INTERNAL_SERVER_ERROR;
+        };
     }
 
     public static ApiException notFound(String message) {

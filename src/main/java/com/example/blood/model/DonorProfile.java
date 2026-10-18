@@ -17,9 +17,11 @@ public class DonorProfile {
     private Integer age;
     private String phone;
     private String city;
+    private String pincode;
     private Double latitude;
     private Double longitude;
     private boolean available = true;
+    private boolean medicalConditionsConfirmed = false;
     private LocalDate declaredLastDonationDate;
     private List<EarnedBadge> badges = new ArrayList<>();
     private String internalAuditNote;
@@ -117,12 +119,36 @@ public class DonorProfile {
         this.available = available;
     }
 
+    public String getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
+    }
+
+    public boolean isMedicalConditionsConfirmed() {
+        return medicalConditionsConfirmed;
+    }
+
+    public void setMedicalConditionsConfirmed(boolean medicalConditionsConfirmed) {
+        this.medicalConditionsConfirmed = medicalConditionsConfirmed;
+    }
+
     public LocalDate getDeclaredLastDonationDate() {
         return declaredLastDonationDate;
     }
 
     public void setDeclaredLastDonationDate(LocalDate declaredLastDonationDate) {
         this.declaredLastDonationDate = declaredLastDonationDate;
+    }
+
+    public LocalDate getLastDonationDate() {
+        return declaredLastDonationDate;
+    }
+
+    public void setLastDonationDate(LocalDate lastDonationDate) {
+        this.declaredLastDonationDate = lastDonationDate;
     }
 
     public List<EarnedBadge> getBadges() {

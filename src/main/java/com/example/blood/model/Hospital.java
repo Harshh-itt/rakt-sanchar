@@ -10,6 +10,7 @@ public class Hospital {
     private String ownerUserId;
     private String name;
     private String registrationNumber;
+    private String contactPerson;
     private String address;
     private String city;
     private String state;
@@ -55,6 +56,14 @@ public class Hospital {
 
     public void setRegistrationNumber(String registrationNumber) {
         this.registrationNumber = registrationNumber;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 
     public String getAddress() {
