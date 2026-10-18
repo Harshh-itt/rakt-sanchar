@@ -354,10 +354,10 @@
     const API = '/api/donors';
 
     async function loadDonors(q='') {
-        const url = q ? `${API}?q=${encodeURIComponent(q)}` : API;
+        const url = q ? `${API}?city=${encodeURIComponent(q)}` : API;
         const res = await fetch(url);
         const data = await res.json();
-        renderDonors(data);
+        renderDonors(Array.isArray(data) ? data : (data.content || []));
     }
 
     function renderDonors(list) {
@@ -456,7 +456,8 @@
 
     async function loadRequests() {
         const res = await fetch(REQUEST_API);
-        const list = await res.json();
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : (data.content || []);
 
         const box = document.getElementById("requestList");
 
