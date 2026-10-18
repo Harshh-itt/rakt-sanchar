@@ -9,14 +9,8 @@ import HospitalsPage from './pages/HospitalsPage';
 import RequestsPage from './pages/RequestsPage';
 import OnboardingPage from './pages/OnboardingPage';
 import DonorDashboardPage from './pages/DonorDashboardPage';
-
-function PlaceholderPage({ title }) {
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
-    </div>
-  );
-}
+import { HospitalDashboardPage } from './pages/HospitalDashboardPage';
+import { AdminHospitalsPage } from './pages/AdminHospitalsPage';
 
 export default function App() {
   return (
@@ -49,7 +43,7 @@ export default function App() {
             path="/hospital/dashboard"
             element={
               <RoleRoute allowedRoles={['HOSPITAL']}>
-                <PlaceholderPage title="Hospital Portal" />
+                <HospitalDashboardPage />
               </RoleRoute>
             }
           />
@@ -57,7 +51,7 @@ export default function App() {
             path="/admin/hospitals"
             element={
               <RoleRoute allowedRoles={['ADMIN']}>
-                <PlaceholderPage title="Admin Verification" />
+                <AdminHospitalsPage />
               </RoleRoute>
             }
           />
