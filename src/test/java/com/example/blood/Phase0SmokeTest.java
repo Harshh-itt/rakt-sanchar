@@ -42,7 +42,7 @@ class Phase0SmokeTest {
 
         mockMvc.perform(get("/api/donors"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$.content").isArray());
 
         String requestPayload = """
                 {
@@ -62,6 +62,6 @@ class Phase0SmokeTest {
 
         mockMvc.perform(get("/api/requests"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$.content").isArray());
     }
 }
