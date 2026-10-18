@@ -2,6 +2,7 @@ package com.example.blood.mapper;
 
 import com.example.blood.dto.DonorResponse;
 import com.example.blood.model.DonorProfile;
+import com.example.blood.service.EligibilityService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -23,10 +24,46 @@ public class DonorMapper {
 
     public DonorResponse toResponse(
             DonorProfile profile,
-            boolean revealPhone,
+            boolean revealPrivateFields,
+            EligibilityService.EligibilityStatus eligibility
+    ) {
+        return toResponse(
+                profile,
+                revealPrivateFields,
+                eligibility.eligible(),
+                eligibility.nextEligibleDate(),
+                eligibility.reason(),
+                eligibility.ageYears(),
+                eligibility.effectiveLastDonationDate()
+        );
+    }
+
+    public DonorResponse toResponse(
+            DonorProfile profile,
+            boolean revealPrivateFields,
             boolean eligible,
             LocalDate nextEligibleDate,
             String eligibilityReason
+    ) {
+        return toResponse(
+                profile,
+                revealPrivateFields,
+                eligible,
+                nextEligibleDate,
+                eligibilityReason,
+                profile.getAge(),
+                profile.getDeclaredLastDonationDate()
+        );
+    }
+
+    public DonorResponse toResponse(
+            DonorProfile profile,
+            boolean revealPrivateFields,
+            boolean eligible,
+            LocalDate nextEligibleDate,
+            String eligibilityReason,
+            Integer resolvedAge,
+            LocalDate effectiveLastDonationDate
     ) {
         return new DonorResponse(
                 profile.getId(),
@@ -34,13 +71,15 @@ public class DonorMapper {
                 profile.getName(),
                 profile.getBloodGroup(),
                 profile.getCity(),
-                revealPhone ? profile.getPhone() : maskPhone(profile.getPhone()),
-                profile.getAge(),
-                revealPhone ? profile.getDateOfBirth() : null,
-                profile.getLatitude(),
-                profile.getLongitude(),
+                profile.getPincode(),
+                revealPrivateFields ? profile.getPhone() : maskPhone(profile.getPhone()),
+                resolvedAge != null ? resolvedAge : profile.getAge(),
+                revealPrivateFields ? profile.getDateOfBirth() : null,
+                revealPrivateFields ? profile.getLatitude() : null,
+                revealPrivateFields ? profile.getLongitude() : null,
                 profile.isAvailable(),
-                profile.getDeclaredLastDonationDate(),
+                profile.isMedicalConditionsConfirmed(),
+                effectiveLastDonationDate != null ? effectiveLastDonationDate : profile.getDeclaredLastDonationDate(),
                 eligible,
                 nextEligibleDate,
                 eligibilityReason,

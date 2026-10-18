@@ -80,6 +80,14 @@ public class Donation {
         this.donatedAt = donatedAt;
     }
 
+    public LocalDate getDonationDate() {
+        return donatedAt;
+    }
+
+    public void setDonationDate(LocalDate donationDate) {
+        this.donatedAt = donationDate;
+    }
+
     public DonationStatus getStatus() {
         return status;
     }
