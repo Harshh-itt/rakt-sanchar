@@ -152,8 +152,8 @@ class Phase4HospitalAndStockTest {
 
     @Test
     void publicHospitalAndStockSearchExcludeUnverifiedHospitalsAndUpsertStockCleanly() throws Exception {
-        // Public hospital search returns only VERIFIED hospital (hosp-city-care), excluding PENDING hosp-janata-seva
-        mockMvc.perform(get("/api/hospitals"))
+        // Public hospital search returns only VERIFIED hospitals (hosp-city-care and hosp-kaveri-blr), excluding PENDING hosp-janata-seva
+        mockMvc.perform(get("/api/hospitals").param("city", "Mumbai"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].id").value("hosp-city-care"));
@@ -204,7 +204,7 @@ class Phase4HospitalAndStockTest {
         oNeg.setUpdatedAt(Instant.now().minus(Duration.ofHours(25)));
         bloodStockRepository.save(oNeg);
 
-        mockMvc.perform(get("/api/stock/search").param("bloodGroup", "O-"))
+        mockMvc.perform(get("/api/stock/search").param("bloodGroup", "O-").param("city", "Mumbai"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].stale").value(true));
 
