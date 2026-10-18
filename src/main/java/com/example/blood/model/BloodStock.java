@@ -65,6 +65,14 @@ public class BloodStock {
         this.lowThreshold = lowThreshold;
     }
 
+    public int getMinThreshold() {
+        return lowThreshold;
+    }
+
+    public void setMinThreshold(int minThreshold) {
+        this.lowThreshold = minThreshold;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
     }

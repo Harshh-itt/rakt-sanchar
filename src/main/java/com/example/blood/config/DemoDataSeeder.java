@@ -1,10 +1,15 @@
 package com.example.blood.config;
 
 import com.example.blood.model.BloodGroup;
+import com.example.blood.model.BloodStock;
 import com.example.blood.model.DonorProfile;
+import com.example.blood.model.Hospital;
+import com.example.blood.model.HospitalStatus;
 import com.example.blood.model.Role;
 import com.example.blood.model.User;
+import com.example.blood.repository.BloodStockRepository;
 import com.example.blood.repository.DonorProfileRepository;
+import com.example.blood.repository.HospitalRepository;
 import com.example.blood.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Profile;
@@ -14,8 +19,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 /**
- * Seeds fictional demo users and initial donor profiles (expanded in Phase 7 with full
- * demo hospitals, stock, donors, requests, and notifications) under the "demo" profile.
+ * Seeds fictional demo users, donor profiles, hospitals, and blood stock
+ * (expanded in Phase 7 with full demo dataset) under the "demo" profile.
  */
 @Component
 @Profile("demo")
@@ -23,19 +28,26 @@ public class DemoDataSeeder {
 
     private final UserRepository userRepository;
     private final DonorProfileRepository donorProfileRepository;
+    private final HospitalRepository hospitalRepository;
+    private final BloodStockRepository bloodStockRepository;
 
     public DemoDataSeeder(
             UserRepository userRepository,
-            DonorProfileRepository donorProfileRepository
+            DonorProfileRepository donorProfileRepository,
+            HospitalRepository hospitalRepository,
+            BloodStockRepository bloodStockRepository
     ) {
         this.userRepository = userRepository;
         this.donorProfileRepository = donorProfileRepository;
+        this.hospitalRepository = hospitalRepository;
+        this.bloodStockRepository = bloodStockRepository;
     }
 
     @PostConstruct
     public void seedInitialData() {
         seedBaseUsers();
         seedBaseDonorProfiles();
+        seedBaseHospitalsAndStock();
     }
 
     public void seedBaseUsers() {
@@ -53,6 +65,43 @@ public class DemoDataSeeder {
         saveDonorIfAbsent("donor-2", "Rohan Verma", BloodGroup.A_POS,
                 LocalDate.of(1994, 8, 20), "9812345678", "Delhi", "110001",
                 28.6139, 77.2090, true, LocalDate.now().minusDays(45));
+    }
+
+    public void seedBaseHospitalsAndStock() {
+        Hospital h1 = saveHospitalIfAbsent(
+                "hosp-city-care",
+                "hospital-1",
+                "City Care Super Specialty Hospital",
+                "MH-MUM-2021-001",
+                "Dr. Sunita Deshmukh",
+                "Plot 14, Veer Savarkar Marg, Dadar West",
+                "Mumbai",
+                "Maharashtra",
+                "400028",
+                "9820112233",
+                19.0178,
+                72.8478,
+                HospitalStatus.VERIFIED
+        );
+        saveStockIfAbsent(h1.getId(), BloodGroup.O_POS, 14, 5, Instant.now());
+        saveStockIfAbsent(h1.getId(), BloodGroup.A_POS, 9, 4, Instant.now());
+        saveStockIfAbsent(h1.getId(), BloodGroup.O_NEG, 3, 4, Instant.now());
+
+        saveHospitalIfAbsent(
+                "hosp-janata-seva",
+                "hospital-2",
+                "Janata Seva Kendra Hospital",
+                "DL-ND-2023-108",
+                "Dr. Rajesh Khanna",
+                "Block C, Connaught Place",
+                "Delhi",
+                "Delhi",
+                "110001",
+                "9811223344",
+                28.6315,
+                77.2167,
+                HospitalStatus.PENDING
+        );
     }
 
     private void saveUserIfAbsent(String id, String name, Role role, boolean onboarded, String language) {
@@ -90,6 +139,52 @@ public class DemoDataSeeder {
             profile.setMedicalConditionsConfirmed(true);
             profile.setDeclaredLastDonationDate(declaredLastDonation);
             donorProfileRepository.save(profile);
+        }
+    }
+
+    private Hospital saveHospitalIfAbsent(
+            String id,
+            String ownerUserId,
+            String name,
+            String regNo,
+            String contactPerson,
+            String address,
+            String city,
+            String state,
+            String pincode,
+            String phone,
+            Double lat,
+            Double lng,
+            HospitalStatus status
+    ) {
+        return hospitalRepository.findByOwnerUserId(ownerUserId).orElseGet(() -> {
+            Hospital h = new Hospital();
+            h.setId(id);
+            h.setOwnerUserId(ownerUserId);
+            h.setName(name);
+            h.setRegistrationNumber(regNo);
+            h.setContactPerson(contactPerson);
+            h.setAddress(address);
+            h.setCity(city);
+            h.setState(state);
+            h.setPincode(pincode);
+            h.setPhone(phone);
+            h.setLatitude(lat);
+            h.setLongitude(lng);
+            h.setStatus(status);
+            return hospitalRepository.save(h);
+        });
+    }
+
+    private void saveStockIfAbsent(String hospitalId, BloodGroup bloodGroup, int units, int minThreshold, Instant updatedAt) {
+        if (bloodStockRepository.findByHospitalIdAndBloodGroup(hospitalId, bloodGroup).isEmpty()) {
+            BloodStock stock = new BloodStock();
+            stock.setHospitalId(hospitalId);
+            stock.setBloodGroup(bloodGroup);
+            stock.setUnits(units);
+            stock.setMinThreshold(minThreshold);
+            stock.setUpdatedAt(updatedAt);
+            bloodStockRepository.save(stock);
         }
     }
 }
