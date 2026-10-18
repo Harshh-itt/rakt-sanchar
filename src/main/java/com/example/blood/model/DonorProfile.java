@@ -159,6 +159,18 @@ public class DonorProfile {
         this.badges = badges != null ? new ArrayList<>(badges) : new ArrayList<>();
     }
 
+    public void addBadge(EarnedBadge badge) {
+        if (badge == null) {
+            return;
+        }
+        if (this.badges == null) {
+            this.badges = new ArrayList<>();
+        }
+        if (!this.badges.contains(badge)) {
+            this.badges.add(badge);
+        }
+    }
+
     public String getInternalAuditNote() {
         return internalAuditNote;
     }

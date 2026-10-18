@@ -2,19 +2,26 @@ package com.example.blood.controller;
 
 import com.example.blood.dto.BloodStockResponse;
 import com.example.blood.dto.BloodStockUpdateRequest;
+import com.example.blood.dto.DonationResponse;
+import com.example.blood.dto.DonationVerificationRequest;
+import com.example.blood.dto.HospitalDonationRecordRequest;
 import com.example.blood.dto.HospitalProfileUpdateRequest;
 import com.example.blood.dto.HospitalResponse;
 import com.example.blood.dto.PageResponse;
 import com.example.blood.model.BloodGroup;
+import com.example.blood.model.DonationStatus;
 import com.example.blood.security.CurrentUser;
 import com.example.blood.security.CurrentUserProvider;
 import com.example.blood.service.BloodStockService;
+import com.example.blood.service.DonationService;
 import com.example.blood.service.HospitalService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +36,18 @@ public class HospitalController {
 
     private final HospitalService hospitalService;
     private final BloodStockService bloodStockService;
+    private final DonationService donationService;
     private final CurrentUserProvider currentUserProvider;
 
     public HospitalController(
             HospitalService hospitalService,
             BloodStockService bloodStockService,
+            DonationService donationService,
             CurrentUserProvider currentUserProvider
     ) {
         this.hospitalService = hospitalService;
         this.bloodStockService = bloodStockService;
+        this.donationService = donationService;
         this.currentUserProvider = currentUserProvider;
     }
 
@@ -83,6 +93,29 @@ public class HospitalController {
         CurrentUser currentUser = currentUserProvider.requireCurrentUser();
         bloodStockService.deleteMyHospitalStock(currentUser, bloodGroup);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me/donations")
+    public List<DonationResponse> getMyHospitalDonations(
+            @RequestParam(name = "status", required = false) DonationStatus status
+    ) {
+        CurrentUser currentUser = currentUserProvider.requireCurrentUser();
+        return donationService.getMyHospitalDonations(currentUser, status);
+    }
+
+    @PostMapping("/me/donations")
+    public DonationResponse recordHospitalDonation(@Valid @RequestBody HospitalDonationRecordRequest request) {
+        CurrentUser currentUser = currentUserProvider.requireCurrentUser();
+        return donationService.recordHospitalDonation(currentUser, request);
+    }
+
+    @PatchMapping("/me/donations/{id}/verify")
+    public DonationResponse verifyOrRejectDonation(
+            @PathVariable("id") String id,
+            @Valid @RequestBody DonationVerificationRequest request
+    ) {
+        CurrentUser currentUser = currentUserProvider.requireCurrentUser();
+        return donationService.verifyOrRejectDonation(currentUser, id, request);
     }
 
     @GetMapping("/{id}")
