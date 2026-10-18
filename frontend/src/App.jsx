@@ -3,6 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import DemoIdentityBanner from './components/DemoIdentityBanner';
 import Navbar from './components/Navbar';
 import RoleRoute from './components/RoleRoute';
+import HomePage from './pages/HomePage';
+import StockSearchPage from './pages/StockSearchPage';
+import HospitalsPage from './pages/HospitalsPage';
+import RequestsPage from './pages/RequestsPage';
 import OnboardingPage from './pages/OnboardingPage';
 
 function PlaceholderPage({ title }) {
@@ -20,10 +24,10 @@ export default function App() {
       <Navbar />
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<PlaceholderPage title="Rakt Sanchar Home" />} />
-          <Route path="/stock" element={<PlaceholderPage title="Blood Stock Search" />} />
-          <Route path="/hospitals" element={<PlaceholderPage title="Verified Hospitals" />} />
-          <Route path="/requests" element={<PlaceholderPage title="Blood Requests" />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/stock" element={<StockSearchPage />} />
+          <Route path="/hospitals" element={<HospitalsPage />} />
+          <Route path="/requests" element={<RequestsPage />} />
           <Route
             path="/onboarding"
             element={
