@@ -1,0 +1,29 @@
+# Optional zero-cost local container orchestration for Rakt Sanchar (Demo Profile)
+# No database container is included because database persistence is deferred (see docs/DEFERRED_WORK.md).
+
+services:
+  backend:
+    image: eclipse-temurin:17-jdk-alpine
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    environment:
+      - SPRING_PROFILES_ACTIVE=demo
+      - SERVER_PORT=8080
+      - APP_CORS_ALLOWED_ORIGINS=http://localhost:5173
+    ports:
+      - "8080:8080"
+    command: ./mvnw spring-boot:run
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /workspace/frontend
+    volumes:
+      - ./:/workspace
+    environment:
+      - VITE_API_BASE_URL=/api
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - backend

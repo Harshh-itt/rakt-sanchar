@@ -118,9 +118,14 @@ export function buildHeaders(extraHeaders = {}) {
 }
 
 export async function apiRequest(path, options = {}) {
+  const normalizedPath = path.startsWith('/api/')
+    ? path.slice(4)
+    : path.startsWith('/')
+    ? path
+    : `/${path}`;
   const url = path.startsWith('http')
     ? path
-    : `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+    : `${API_BASE_URL}${normalizedPath}`;
 
   const customHeaders = { ...(options.headers || {}) };
   let body = options.body;

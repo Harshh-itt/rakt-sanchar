@@ -1,0 +1,118 @@
+### ============================================================================
+### RAKT SANCHAR — Local Demo API Requests (Stub Identity Headers)
+### Base URL: http://localhost:8080 (Started with SPRING_PROFILES_ACTIVE=demo)
+### No passwords or tokens required; DevStubCurrentUserProvider reads:
+###   X-Demo-User-Id: <userId>
+###   X-Demo-Role: DONOR | HOSPITAL | ADMIN
+### ============================================================================
+
+@baseUrl = http://localhost:8080
+
+### 1. Public Platform Statistics (No Identity Required)
+GET {{baseUrl}}/api/stats/public
+Accept: application/json
+
+### 2. Public Blood Stock Search (Verified Hospitals Only)
+GET {{baseUrl}}/api/stock?bloodGroup=O%2B&city=Mumbai
+Accept: application/json
+
+### 3. Public Verified Hospital Directory
+GET {{baseUrl}}/api/hospitals?city=Mumbai&page=0&size=10
+Accept: application/json
+
+### 4. Public Eligible Donor Directory (Phone Numbers Masked: ******3210)
+GET {{baseUrl}}/api/donors?bloodGroup=O%2B&city=Mumbai&eligibleOnly=true&page=0&size=10
+Accept: application/json
+
+### 5. Acting User Identity & Language Preference (Donor)
+GET {{baseUrl}}/api/users/me
+X-Demo-User-Id: donor-1
+X-Demo-Role: DONOR
+Accept: application/json
+
+### 6. Switch Preferred Language to Hindi (hi)
+PATCH {{baseUrl}}/api/users/me/language
+X-Demo-User-Id: donor-1
+X-Demo-Role: DONOR
+Content-Type: application/json
+
+{
+  "preferredLanguage": "hi"
+}
+
+### 7. Donor Self-Service Profile & Eligibility Summary
+GET {{baseUrl}}/api/donors/me/summary
+X-Demo-User-Id: donor-1
+X-Demo-Role: DONOR
+Accept: application/json
+
+### 8. Toggle Donor Availability
+PATCH {{baseUrl}}/api/donors/me/availability
+X-Demo-User-Id: donor-1
+X-Demo-Role: DONOR
+Content-Type: application/json
+
+{
+  "available": true
+}
+
+### 9. Create Urgent Blood Request (Triggers Matching & In-App Notifications)
+POST {{baseUrl}}/api/requests
+X-Demo-User-Id: donor-4
+X-Demo-Role: DONOR
+Content-Type: application/json
+
+{
+  "patientName": "Vikramaditya Rao",
+  "bloodGroup": "O+",
+  "units": 2,
+  "urgency": "CRITICAL",
+  "hospitalName": "City Care Hospital",
+  "city": "Mumbai",
+  "contactPhone": "9820112233",
+  "neededBy": "2026-10-25T18:00:00Z",
+  "latitude": 19.0760,
+  "longitude": 72.8777,
+  "notes": "Emergency cardiac surgery requirement"
+}
+
+### 10. Hospital Portal — Get Own Hospital Profile & Stock
+GET {{baseUrl}}/api/hospitals/me/stock
+X-Demo-User-Id: hospital-1
+X-Demo-Role: HOSPITAL
+Accept: application/json
+
+### 11. Hospital Portal — Update Blood Stock (Triggers Low-Stock Alert if units <= minThreshold)
+PUT {{baseUrl}}/api/hospitals/me/stock/O-
+X-Demo-User-Id: hospital-1
+X-Demo-Role: HOSPITAL
+Content-Type: application/json
+
+{
+  "units": 2,
+  "minThreshold": 5
+}
+
+### 12. Hospital Portal — Record Verified Donation Directly (Awards Badges & Updates Last Donation Date)
+POST {{baseUrl}}/api/hospitals/me/donations
+X-Demo-User-Id: hospital-1
+X-Demo-Role: HOSPITAL
+Content-Type: application/json
+
+{
+  "donorUserId": "donor-1",
+  "units": 1,
+  "donatedAt": "2026-10-18"
+}
+
+### 13. Admin Verification Queue — List Pending Hospitals
+GET {{baseUrl}}/api/admin/hospitals?status=PENDING
+X-Demo-User-Id: admin-1
+X-Demo-Role: ADMIN
+Accept: application/json
+
+### 14. In-App Notifications for Current Demo User
+GET {{baseUrl}}/api/notifications?page=0&size=20
+X-Demo-User-Id: donor-1
+X-Demo-Role: DONOR
+Accept: application/json

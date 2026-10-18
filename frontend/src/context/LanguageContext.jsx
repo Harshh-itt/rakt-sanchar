@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import en from '../i18n/en.json';
 import hi from '../i18n/hi.json';
 import { api } from '../api/client';
@@ -11,20 +11,28 @@ const LanguageContext = createContext(null);
 
 export function LanguageProvider({ children }) {
   const { userProfile, isAuthenticated } = useIdentity();
+  const manualOverrideRef = useRef(false);
+  const lastUserIdRef = useRef(null);
   const [lang, setLangState] = useState(() => {
     return localStorage.getItem(LANG_STORAGE_KEY) || 'en';
   });
 
   useEffect(() => {
     if (userProfile && userProfile.preferredLanguage) {
-      const serverLang = userProfile.preferredLanguage.toLowerCase() === 'hi' ? 'hi' : 'en';
-      setLangState(serverLang);
-      localStorage.setItem(LANG_STORAGE_KEY, serverLang);
+      if (lastUserIdRef.current !== userProfile.id) {
+        lastUserIdRef.current = userProfile.id;
+        if (!manualOverrideRef.current) {
+          const serverLang = userProfile.preferredLanguage.toLowerCase() === 'hi' ? 'hi' : 'en';
+          setLangState(serverLang);
+          localStorage.setItem(LANG_STORAGE_KEY, serverLang);
+        }
+      }
     }
   }, [userProfile]);
 
   const setLanguage = useCallback(
     async (nextLang) => {
+      manualOverrideRef.current = true;
       const normalized = nextLang === 'hi' ? 'hi' : 'en';
       setLangState(normalized);
       localStorage.setItem(LANG_STORAGE_KEY, normalized);
