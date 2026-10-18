@@ -8,6 +8,7 @@ import StockSearchPage from './pages/StockSearchPage';
 import HospitalsPage from './pages/HospitalsPage';
 import RequestsPage from './pages/RequestsPage';
 import OnboardingPage from './pages/OnboardingPage';
+import DonorDashboardPage from './pages/DonorDashboardPage';
 
 function PlaceholderPage({ title }) {
   return (
@@ -40,7 +41,7 @@ export default function App() {
             path="/donor/dashboard"
             element={
               <RoleRoute allowedRoles={['DONOR']}>
-                <PlaceholderPage title="Donor Dashboard" />
+                <DonorDashboardPage />
               </RoleRoute>
             }
           />
